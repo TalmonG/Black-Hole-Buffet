@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PlayerControls : MonoBehaviour
 {
+
     public float maxMoveSpeed = 5f; // Maximum speed when the joystick is fully pushed
     public Joystick joystick; // Reference to your Joystick
     public Transform face; // Reference to the player's face (Sprite/Transform)
