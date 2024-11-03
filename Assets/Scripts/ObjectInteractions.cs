@@ -21,9 +21,22 @@ public class ObjectInteractions : MonoBehaviour
     private float snailSize = 8.5f;
     private float pineconeSize = 11.0f;
 
+    private AudioManager audioManager; // Reference to AudioManager
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        GameObject audioManagerObject = GameObject.FindGameObjectWithTag("AudioManager");
+        if (audioManagerObject != null)
+        {
+            audioManager = audioManagerObject.GetComponent<AudioManager>();
+        }
+        else
+        {
+            Debug.LogWarning("AudioManager not found in the scene!");
+        }
+
         // Assuming the first collider is the main and the second is the trigger
         Collider2D[] colliders = player.GetComponents<Collider2D>();
 
@@ -37,18 +50,20 @@ public class ObjectInteractions : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision) // Handles Main Collider
     {
-        if (collision.gameObject.CompareTag("Ant"))
+        if (collision.gameObject.CompareTag("GrainOfSand"))
         {
-            if (playerSize > antSize)
+            if (playerSize > grainOfSandSize)
             {
+
                 // If player is larger, allow the player to pass through by turning the object into a trigger
                 collision.gameObject.GetComponent<Collider2D>().isTrigger = true;
             }
         }
-        else if (collision.gameObject.CompareTag("GrainOfSand"))
+        else if (collision.gameObject.CompareTag("Ant"))
         {
-            if (playerSize > grainOfSandSize)
+            if (playerSize > antSize)
             {
+                
                 // If player is larger, allow the player to pass through by turning the object into a trigger
                 collision.gameObject.GetComponent<Collider2D>().isTrigger = true;
             }
@@ -119,12 +134,13 @@ public class ObjectInteractions : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision) // This is for the trigger collider
+    private void OnTriggerEnter2D(Collider2D collision) // This is for the trigger collider // Actual eating
     {
         if (collision.gameObject.CompareTag("GrainOfSand"))
         {
             if (playerSize > grainOfSandSize)
             {
+                audioManager.Play("Collect");
                 float sizeMultiplier = grainOfSandSize / 100;
                 // Increase player size and destroy the grain of sand
                 playerSize += grainOfSandSize / 10;
@@ -136,8 +152,8 @@ public class ObjectInteractions : MonoBehaviour
         {
             if (playerSize > antSize)
             {
+                audioManager.Play("Collect");
                 float sizeMultiplier = playerSize + (antSize / 100);
-
                 // Increase player size and destroy the ant
                 playerSize += antSize / 10;
                 player.transform.localScale += new Vector3(antSize * sizeMultiplier, antSize * sizeMultiplier, player.transform.localScale.z);
