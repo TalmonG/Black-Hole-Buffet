@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.UI;
+
 using TMPro;
 
 public class ObjectInteractions : MonoBehaviour
@@ -36,10 +38,18 @@ public class ObjectInteractions : MonoBehaviour
 
     private AudioManager audioManager;
     private TextMeshProUGUI consumeHistoryText;
-    private GameObject consumeHistoryIcon;
+    public Image consumeHistoryIcon;
+
+    //Icons
+    public Sprite grainOfSandIcon; 
+    public Sprite antIcon; 
+
+
 
     void Start()
     {
+
+
         // Consume History
         GameObject consumeHistoryTextObj = GameObject.FindGameObjectWithTag("ConsumeHistoryText");
         consumeHistoryText = consumeHistoryTextObj.GetComponent<TextMeshProUGUI>();
@@ -91,15 +101,23 @@ public class ObjectInteractions : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision) // Consume 
     {
+        
+
+            
+
+
         if (collision.gameObject.CompareTag("GrainOfSand") && playerSize >= grainOfSandSize)
         {
             ConsumeObject(grainOfSandMeasurement, grainOfSandSize, collision);
             consumeHistoryText.text = "Grain Of Sand";
+            consumeHistoryIcon.sprite = grainOfSandIcon;
             
         }
         else if (collision.gameObject.CompareTag("Ant") && playerSize >= antSize)
         {
             ConsumeObject(antMeasurement, antSize, collision);
+            consumeHistoryText.text = "Ant";
+            consumeHistoryIcon.sprite = antIcon;
         }
         else if (collision.gameObject.CompareTag("Pebble") && playerSize >= pebbleSize)
         {

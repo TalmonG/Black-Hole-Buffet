@@ -375,6 +375,7 @@ GameObject:
   - component: {fileID: 424893861}
   - component: {fileID: 424893863}
   - component: {fileID: 424893862}
+  - component: {fileID: 424893864}
   m_Layer: 5
   m_Name: Icon
   m_TagString: ConsumeHistoryIcon
@@ -439,6 +440,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 424893860}
   m_CullTransparentMesh: 1
+--- !u!114 &424893864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 424893860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e2e89866f7c87b469f720454d28e54b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &428011825
 GameObject:
   m_ObjectHideFlags: 0
@@ -2738,9 +2751,21 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 506991683}
     - target: {fileID: 7098854637536976571, guid: d74374ed61ab03842950c9fd668feb2f, type: 3}
+      propertyPath: antIcon
+      value: 
+      objectReference: {fileID: -767842634614617014, guid: 40bd0ef7da2fa354f98eacd779a02d76, type: 3}
+    - target: {fileID: 7098854637536976571, guid: d74374ed61ab03842950c9fd668feb2f, type: 3}
       propertyPath: sizeText
       value: 
       objectReference: {fileID: 506991681}
+    - target: {fileID: 7098854637536976571, guid: d74374ed61ab03842950c9fd668feb2f, type: 3}
+      propertyPath: grainOfSandIcon
+      value: 
+      objectReference: {fileID: -5882777961285432967, guid: 0f48938357f965343845fc885739b8e4, type: 3}
+    - target: {fileID: 7098854637536976571, guid: d74374ed61ab03842950c9fd668feb2f, type: 3}
+      propertyPath: consumeHistoryIcon
+      value: 
+      objectReference: {fileID: 424893862}
     - target: {fileID: 8924239129917865571, guid: d74374ed61ab03842950c9fd668feb2f, type: 3}
       propertyPath: joystick
       value: 
