@@ -35,9 +35,18 @@ public class ObjectInteractions : MonoBehaviour
     private float pineconeSize = 11.0f;
 
     private AudioManager audioManager;
+    private TextMeshProUGUI consumeHistoryText;
+    private GameObject consumeHistoryIcon;
 
     void Start()
     {
+        // Consume History
+        GameObject consumeHistoryTextObj = GameObject.FindGameObjectWithTag("ConsumeHistoryText");
+        consumeHistoryText = consumeHistoryTextObj.GetComponent<TextMeshProUGUI>();
+
+        GameObject consumeHistoryIcon = GameObject.FindGameObjectWithTag("ConsumeHistoryIcon");
+
+        // AudioManager
         GameObject audioManagerObject = GameObject.FindGameObjectWithTag("AudioManager");
         if (audioManagerObject != null)
         {
@@ -77,6 +86,52 @@ public class ObjectInteractions : MonoBehaviour
         else if (playerSizeCounter >= 100000)
         {
             text.text = (playerSizeCounter / 100000).ToString("F2") + " Kilometers";
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision) // Consume 
+    {
+        if (collision.gameObject.CompareTag("GrainOfSand") && playerSize >= grainOfSandSize)
+        {
+            ConsumeObject(grainOfSandMeasurement, grainOfSandSize, collision);
+            consumeHistoryText.text = "Grain Of Sand";
+            
+        }
+        else if (collision.gameObject.CompareTag("Ant") && playerSize >= antSize)
+        {
+            ConsumeObject(antMeasurement, antSize, collision);
+        }
+        else if (collision.gameObject.CompareTag("Pebble") && playerSize >= pebbleSize)
+        {
+            ConsumeObject(pebbleMeasurement, pebbleSize, collision);
+        }
+        else if (collision.gameObject.CompareTag("Ladybug") && playerSize >= ladybugSize)
+        {
+            ConsumeObject(ladybugMeasurement, ladybugSize, collision);
+        }
+        else if (collision.gameObject.CompareTag("Leaf") && playerSize >= leafSize)
+        {
+            ConsumeObject(leafMeasurement, leafSize, collision);
+        }
+        else if (collision.gameObject.CompareTag("Coin") && playerSize >= coinSize)
+        {
+            ConsumeObject(coinMeasurement, coinSize, collision);
+        }
+        else if (collision.gameObject.CompareTag("SmallFlower") && playerSize >= smallFlowerSize)
+        {
+            ConsumeObject(smallFlowerMeasurement, smallFlowerSize, collision);
+        }
+        else if (collision.gameObject.CompareTag("Feather") && playerSize >= featherSize)
+        {
+            ConsumeObject(featherMeasurement, featherSize, collision);
+        }
+        else if (collision.gameObject.CompareTag("Snail") && playerSize >= snailSize)
+        {
+            ConsumeObject(snailMeasurement, snailSize, collision);
+        }
+        else if (collision.gameObject.CompareTag("Pinecone") && playerSize >= pineconeSize)
+        {
+            ConsumeObject(pineconeMeasurement, pineconeSize, collision);
         }
     }
 
@@ -124,49 +179,6 @@ public class ObjectInteractions : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("GrainOfSand") && playerSize >= grainOfSandSize)
-        {
-            ConsumeObject(grainOfSandMeasurement, grainOfSandSize, collision);
-        }
-        else if (collision.gameObject.CompareTag("Ant") && playerSize >= antSize)
-        {
-            ConsumeObject(antMeasurement, antSize, collision);
-        }
-        else if (collision.gameObject.CompareTag("Pebble") && playerSize >= pebbleSize)
-        {
-            ConsumeObject(pebbleMeasurement, pebbleSize, collision);
-        }
-        else if (collision.gameObject.CompareTag("Ladybug") && playerSize >= ladybugSize)
-        {
-            ConsumeObject(ladybugMeasurement, ladybugSize, collision);
-        }
-        else if (collision.gameObject.CompareTag("Leaf") && playerSize >= leafSize)
-        {
-            ConsumeObject(leafMeasurement, leafSize, collision);
-        }
-        else if (collision.gameObject.CompareTag("Coin") && playerSize >= coinSize)
-        {
-            ConsumeObject(coinMeasurement, coinSize, collision);
-        }
-        else if (collision.gameObject.CompareTag("SmallFlower") && playerSize >= smallFlowerSize)
-        {
-            ConsumeObject(smallFlowerMeasurement, smallFlowerSize, collision);
-        }
-        else if (collision.gameObject.CompareTag("Feather") && playerSize >= featherSize)
-        {
-            ConsumeObject(featherMeasurement, featherSize, collision);
-        }
-        else if (collision.gameObject.CompareTag("Snail") && playerSize >= snailSize)
-        {
-            ConsumeObject(snailMeasurement, snailSize, collision);
-        }
-        else if (collision.gameObject.CompareTag("Pinecone") && playerSize >= pineconeSize)
-        {
-            ConsumeObject(pineconeMeasurement, pineconeSize, collision);
-        }
-    }
 
     private void ConsumeObject(float measurement, float size, Collider2D collision)
     {
