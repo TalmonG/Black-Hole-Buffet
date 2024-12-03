@@ -104,7 +104,7 @@ GameObject:
   - component: {fileID: 3657585005035747723}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -275,7 +275,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1230181429599934963}
+  text: {fileID: 0}
   playerSize: 0.2
+  playerSizeCounter: 2
+  consumeHistoryIcon: {fileID: 0}
+  grainOfSandIcon: {fileID: -5882777961285432967, guid: 0f48938357f965343845fc885739b8e4, type: 3}
+  antIcon: {fileID: -767842634614617014, guid: 40bd0ef7da2fa354f98eacd779a02d76, type: 3}
 --- !u!58 &3657585005035747723
 CircleCollider2D:
   m_ObjectHideFlags: 0

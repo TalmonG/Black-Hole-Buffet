@@ -17,6 +17,7 @@ TagManager:
   - AudioManager
   - ConsumeHistoryText
   - ConsumeHistoryIcon
+  - CineCam
   layers:
   - Default
   - TransparentFX

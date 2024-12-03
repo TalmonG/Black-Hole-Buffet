@@ -467,7 +467,7 @@ GameObject:
   - component: {fileID: 428011830}
   m_Layer: 0
   m_Name: CinemachineCamera
-  m_TagString: Untagged
+  m_TagString: CineCam
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5160,18 +5160,6 @@ PrefabInstance:
       propertyPath: text
       value: 
       objectReference: {fileID: 506991683}
-    - target: {fileID: 7098854637536976571, guid: d74374ed61ab03842950c9fd668feb2f, type: 3}
-      propertyPath: antIcon
-      value: 
-      objectReference: {fileID: -767842634614617014, guid: 40bd0ef7da2fa354f98eacd779a02d76, type: 3}
-    - target: {fileID: 7098854637536976571, guid: d74374ed61ab03842950c9fd668feb2f, type: 3}
-      propertyPath: sizeText
-      value: 
-      objectReference: {fileID: 506991681}
-    - target: {fileID: 7098854637536976571, guid: d74374ed61ab03842950c9fd668feb2f, type: 3}
-      propertyPath: grainOfSandIcon
-      value: 
-      objectReference: {fileID: -5882777961285432967, guid: 0f48938357f965343845fc885739b8e4, type: 3}
     - target: {fileID: 7098854637536976571, guid: d74374ed61ab03842950c9fd668feb2f, type: 3}
       propertyPath: consumeHistoryIcon
       value: 
