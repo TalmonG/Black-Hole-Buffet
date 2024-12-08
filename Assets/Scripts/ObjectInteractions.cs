@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-
 using TMPro;
 
 public class ObjectInteractions : MonoBehaviour
@@ -13,48 +12,29 @@ public class ObjectInteractions : MonoBehaviour
     private Collider2D mainCollider;
     private Collider2D triggerCollider;
 
-    // Measurements and sizes
-    private float grainOfSandMeasurement = 1f;
-    private float antMeasurement = 2f;
-    private float pebbleMeasurement = 5f;
-    private float ladybugMeasurement = 9f;
-    private float leafMeasurement = 14f;
-    private float coinMeasurement = 19f;
-    private float smallFlowerMeasurement = 40f;
-    private float featherMeasurement = 60f;
-    private float snailMeasurement = 85f;
-    private float pineconeMeasurement = 110f;
-
-    private float grainOfSandSize = 0.1f;
-    private float antSize = 0.3f;
-    private float pebbleSize = 0.5f;
-    private float ladybugSize = 0.9f;
-    private float leafSize = 1.4f;
-    private float coinSize = 1.9f;
-    private float smallFlowerSize = 4.0f;
-    private float featherSize = 6.0f;
-    private float snailSize = 8.5f;
-    private float pineconeSize = 11.0f;
-
     private AudioManager audioManager;
     private TextMeshProUGUI consumeHistoryText;
     public Image consumeHistoryIcon;
 
-    //Icons
+    // Icons
     public Sprite grainOfSandIcon; 
     public Sprite antIcon; 
-
-
+    // Add other icons as needed
 
     void Start()
     {
-
-
         // Consume History
         GameObject consumeHistoryTextObj = GameObject.FindGameObjectWithTag("ConsumeHistoryText");
-        consumeHistoryText = consumeHistoryTextObj.GetComponent<TextMeshProUGUI>();
+        if (consumeHistoryTextObj != null)
+            consumeHistoryText = consumeHistoryTextObj.GetComponent<TextMeshProUGUI>();
+        else
+            Debug.LogError("ConsumeHistoryText GameObject not found!");
 
-        GameObject consumeHistoryIcon = GameObject.FindGameObjectWithTag("ConsumeHistoryIcon");
+        GameObject consumeHistoryIconObj = GameObject.FindGameObjectWithTag("ConsumeHistoryIcon");
+        if (consumeHistoryIconObj != null)
+            consumeHistoryIcon = consumeHistoryIconObj.GetComponent<Image>();
+        else
+            Debug.LogError("ConsumeHistoryIcon GameObject not found!");
 
         // AudioManager
         GameObject audioManagerObject = GameObject.FindGameObjectWithTag("AudioManager");
@@ -67,6 +47,7 @@ public class ObjectInteractions : MonoBehaviour
             Debug.LogWarning("AudioManager not found in the scene!");
         }
 
+        // Colliders
         Collider2D[] colliders = player.GetComponents<Collider2D>();
         if (colliders.Length > 1)
         {
@@ -87,7 +68,7 @@ public class ObjectInteractions : MonoBehaviour
         }
         else if (playerSizeCounter >= 10 && playerSizeCounter < 1000) // 100cm = 1000mm
         {
-            text.text = Mathf.FloorToInt(playerSizeCounter / 10).ToString("F2") + " Centimeters"; // Display whole centimeters
+            text.text = (playerSizeCounter / 10).ToString("F2") + " Centimeters"; // Display with two decimal places
         }
         else if (playerSizeCounter >= 1000 && playerSizeCounter < 100000) // 1m = 100cm = 100000mm
         {
@@ -101,106 +82,113 @@ public class ObjectInteractions : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision) // Consume 
     {
-        
+        string tag = collision.gameObject.tag;
+        float measurement;
+        float size;
 
-            
-
-
-        if (collision.gameObject.CompareTag("GrainOfSand") && playerSize >= grainOfSandSize)
+        if (GetMeasurementAndSize(tag, out measurement, out size))
         {
-            ConsumeObject(grainOfSandMeasurement, grainOfSandSize, collision);
-            consumeHistoryText.text = "Grain Of Sand";
-            consumeHistoryIcon.sprite = grainOfSandIcon;
-            
-        }
-        else if (collision.gameObject.CompareTag("Ant") && playerSize >= antSize)
-        {
-            ConsumeObject(antMeasurement, antSize, collision);
-            consumeHistoryText.text = "Ant";
-            consumeHistoryIcon.sprite = antIcon;
-        }
-        else if (collision.gameObject.CompareTag("Pebble") && playerSize >= pebbleSize)
-        {
-            ConsumeObject(pebbleMeasurement, pebbleSize, collision);
-        }
-        else if (collision.gameObject.CompareTag("Ladybug") && playerSize >= ladybugSize)
-        {
-            ConsumeObject(ladybugMeasurement, ladybugSize, collision);
-        }
-        else if (collision.gameObject.CompareTag("Leaf") && playerSize >= leafSize)
-        {
-            ConsumeObject(leafMeasurement, leafSize, collision);
-        }
-        else if (collision.gameObject.CompareTag("Coin") && playerSize >= coinSize)
-        {
-            ConsumeObject(coinMeasurement, coinSize, collision);
-        }
-        else if (collision.gameObject.CompareTag("SmallFlower") && playerSize >= smallFlowerSize)
-        {
-            ConsumeObject(smallFlowerMeasurement, smallFlowerSize, collision);
-        }
-        else if (collision.gameObject.CompareTag("Feather") && playerSize >= featherSize)
-        {
-            ConsumeObject(featherMeasurement, featherSize, collision);
-        }
-        else if (collision.gameObject.CompareTag("Snail") && playerSize >= snailSize)
-        {
-            ConsumeObject(snailMeasurement, snailSize, collision);
-        }
-        else if (collision.gameObject.CompareTag("Pinecone") && playerSize >= pineconeSize)
-        {
-            ConsumeObject(pineconeMeasurement, pineconeSize, collision);
+            if (playerSize >= size)
+            {
+                ConsumeObject(measurement, size, collision);
+                consumeHistoryText.text = FormatTag(tag);
+                consumeHistoryIcon.sprite = GetIcon(tag);
+            }
+            else
+            {
+                Debug.Log($"Player size {playerSize} is too small to consume {tag}.");
+            }
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("GrainOfSand") && playerSize >= grainOfSandSize)
+        string tag = collision.gameObject.tag;
+        float measurement;
+        float size;
+
+        if (GetMeasurementAndSize(tag, out measurement, out size))
         {
-            collision.gameObject.GetComponent<Collider2D>().isTrigger = true;
-        }
-        else if (collision.gameObject.CompareTag("Ant") && playerSize >= antSize)
-        {
-            collision.gameObject.GetComponent<Collider2D>().isTrigger = true;
-        }
-        else if (collision.gameObject.CompareTag("Pebble") && playerSize >= pebbleSize)
-        {
-            collision.gameObject.GetComponent<Collider2D>().isTrigger = true;
-        }
-        else if (collision.gameObject.CompareTag("Ladybug") && playerSize >= ladybugSize)
-        {
-            collision.gameObject.GetComponent<Collider2D>().isTrigger = true;
-        }
-        else if (collision.gameObject.CompareTag("Leaf") && playerSize >= leafSize)
-        {
-            collision.gameObject.GetComponent<Collider2D>().isTrigger = true;
-        }
-        else if (collision.gameObject.CompareTag("Coin") && playerSize >= coinSize)
-        {
-            collision.gameObject.GetComponent<Collider2D>().isTrigger = true;
-        }
-        else if (collision.gameObject.CompareTag("SmallFlower") && playerSize >= smallFlowerSize)
-        {
-            collision.gameObject.GetComponent<Collider2D>().isTrigger = true;
-        }
-        else if (collision.gameObject.CompareTag("Feather") && playerSize >= featherSize)
-        {
-            collision.gameObject.GetComponent<Collider2D>().isTrigger = true;
-        }
-        else if (collision.gameObject.CompareTag("Snail") && playerSize >= snailSize)
-        {
-            collision.gameObject.GetComponent<Collider2D>().isTrigger = true;
-        }
-        else if (collision.gameObject.CompareTag("Pinecone") && playerSize >= pineconeSize)
-        {
-            collision.gameObject.GetComponent<Collider2D>().isTrigger = true;
+            if (playerSize >= size)
+            {
+                // Set the collided object's collider to trigger
+                collision.gameObject.GetComponent<Collider2D>().isTrigger = true;
+            }
         }
     }
 
+    private bool GetMeasurementAndSize(string tag, out float measurement, out float size)
+    {
+        measurement = 0f;
+        size = 0f;
+
+        switch (tag)
+        {
+            case "GrainOfSand":
+                measurement = 1f;
+                size = 0.1f;
+                break;
+            case "Ant":
+                measurement = 2f;
+                size = 0.3f;
+                break;
+            case "Pebble":
+                measurement = 5f;
+                size = 0.5f;
+                break;
+            case "Ladybug":
+                measurement = 9f;
+                size = 0.9f;
+                break;
+            case "Leaf":
+                measurement = 14f;
+                size = 1.4f;
+                break;
+            case "Coin":
+                measurement = 19f;
+                size = 1.9f;
+                break;
+            case "SmallFlower":
+                measurement = 40f;
+                size = 4.0f;
+                break;
+            case "Feather":
+                measurement = 60f;
+                size = 6.0f;
+                break;
+            case "Snail":
+                measurement = 85f;
+                size = 8.5f;
+                break;
+            case "Pinecone":
+                measurement = 110f;
+                size = 11.0f;
+                break;
+            default:
+                Debug.LogWarning($"Unhandled tag: {tag}");
+                return false;
+        }
+
+        return true;
+    }
+
+    private Sprite GetIcon(string tag)
+    {
+        switch (tag)
+        {
+            case "GrainOfSand":
+                return grainOfSandIcon;
+            case "Ant":
+                return antIcon;
+            // Add cases for other tags and their corresponding icons
+            default:
+                return null;
+        }
+    }
 
     private void ConsumeObject(float measurement, float size, Collider2D collision)
     {
-        audioManager.Play("Collect");
+        audioManager?.Play("Collect");
 
         // Increment player size and counter
         playerSizeCounter += measurement;
@@ -222,5 +210,11 @@ public class ObjectInteractions : MonoBehaviour
     {
         float scaleIncrement = sizeIncrement / 10;
         player.transform.localScale += new Vector3(scaleIncrement, scaleIncrement, 0);
+    }
+
+    private string FormatTag(string tag)
+    {
+        // Format the tag to a more readable form, e.g., "GrainOfSand" to "Grain Of Sand"
+        return System.Text.RegularExpressions.Regex.Replace(tag, "([A-Z])", " $1").Trim();
     }
 }
