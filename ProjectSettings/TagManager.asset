@@ -18,6 +18,11 @@ TagManager:
   - ConsumeHistoryText
   - ConsumeHistoryIcon
   - CineCam
+  - Lvl1
+  - Lvl2
+  - Lvl3
+  - Lvl4
+  - Lvl5
   layers:
   - Default
   - TransparentFX

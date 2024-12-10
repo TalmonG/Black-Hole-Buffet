@@ -625,7 +625,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3cbef62ba944fa429c932f1fd350a53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cineCamCamera: {fileID: 0}
+  levels:
+  - {fileID: 654702343}
+  - {fileID: 1679123854}
   zoomDuration: 1
 --- !u!1 &428632356
 GameObject:
@@ -1188,7 +1190,7 @@ GameObject:
   - component: {fileID: 654702344}
   m_Layer: 0
   m_Name: lvl01_Dirt
-  m_TagString: Untagged
+  m_TagString: Lvl1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4764,11 +4766,11 @@ GameObject:
   - component: {fileID: 1679123856}
   m_Layer: 0
   m_Name: lvl02_DirtLarger
-  m_TagString: Untagged
+  m_TagString: Lvl2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1679123855
 Transform:
   m_ObjectHideFlags: 0

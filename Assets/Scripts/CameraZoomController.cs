@@ -1,10 +1,14 @@
 using UnityEngine;
+using System.Collections;
 using Unity.Cinemachine;
 
 public class CameraZoomController : MonoBehaviour
 {
+    // Levels
+    public GameObject[] levels;
+
     private ObjectInteractions objectInteractions; // Reference to ObjectInteractions script
-    public CinemachineCamera cineCamCamera; // Reference to the Cinemachine Virtual Camera
+    private CinemachineCamera cineCamCamera; // Reference to the Cinemachine Virtual Camera
     private bool isZooming = false; // Flag to prevent multiple zooms at the same time
     private int zoomCount = 0; // To track the current zoom stage
 
@@ -69,6 +73,15 @@ public class CameraZoomController : MonoBehaviour
         }
     }
 
+    void FadeBackground(GameObject level)
+    {
+        // Find the script in the scene
+        FadeOut fadeScript = FindObjectOfType<FadeOut>();
+
+        // Call the fade-out method on the target GameObject
+        fadeScript.FadeOutBackground(myGameObject);
+
+    }
     /// <summary>
     /// Coroutine to smoothly zoom out the camera.
     /// </summary>
@@ -89,6 +102,9 @@ public class CameraZoomController : MonoBehaviour
         float targetSize = currentSize + increment;
 
         float elapsed = 0f;
+
+        // Fade Bg Out
+        FadeBackground(levels[zoomCount--]);
 
         while (elapsed < zoomDuration)
         {
@@ -118,6 +134,7 @@ public class CameraZoomController : MonoBehaviour
 
         isZooming = false;
     }
+
 
     // Optional: Coroutine for background fade effect
     /*
