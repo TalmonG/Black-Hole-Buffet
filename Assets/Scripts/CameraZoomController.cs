@@ -68,7 +68,6 @@ public class CameraZoomController : MonoBehaviour
             {
                 // Start the zoom out Coroutine with the corresponding increment
                 StartCoroutine(ZoomOut(zoomIncrements[zoomCount]));
-                zoomCount++; // Move to the next zoom stage
             }
         }
     }
@@ -79,7 +78,7 @@ public class CameraZoomController : MonoBehaviour
         FadeOut fadeScript = FindObjectOfType<FadeOut>();
 
         // Call the fade-out method on the target GameObject
-        fadeScript.FadeOutBackground(myGameObject);
+        //fadeScript.FadeOutBackground(myGameObject);
 
     }
     /// <summary>
@@ -104,7 +103,7 @@ public class CameraZoomController : MonoBehaviour
         float elapsed = 0f;
 
         // Fade Bg Out
-        FadeBackground(levels[zoomCount--]);
+        FadeBackground(levels[zoomCount]);
 
         while (elapsed < zoomDuration)
         {
@@ -131,8 +130,9 @@ public class CameraZoomController : MonoBehaviour
         // TODO: Adjust camera bounds to the new size if necessary
         // Example:
         // AdjustCameraBounds(targetSize);
-
         isZooming = false;
+        zoomCount++;
+
     }
 
 
