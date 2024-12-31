@@ -5,6 +5,7 @@ using TMPro;
 public class ObjectInteractions : MonoBehaviour
 {
     public GameObject player;
+    public int playerLevel = 1;
     public TextMeshProUGUI text;  // Reference to the UI TextMeshProUGUI component
     public float playerSize = 0.2f;
     public float playerSizeCounter = 2f;
@@ -117,7 +118,7 @@ public class ObjectInteractions : MonoBehaviour
         }
     }
 
-    private bool GetMeasurementAndSize(string tag, out float measurement, out float size)
+    public bool GetMeasurementAndSize(string tag, out float measurement, out float size)
     {
         measurement = 0f;
         size = 0f;

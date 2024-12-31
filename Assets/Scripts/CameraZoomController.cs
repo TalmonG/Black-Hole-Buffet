@@ -78,15 +78,15 @@ public class CameraZoomController : MonoBehaviour
         FadeOut fadeScript = FindObjectOfType<FadeOut>();
 
         // Call the fade-out method on the target GameObject
-        //fadeScript.FadeOutBackground(myGameObject);
-
+        // fadeScript.FadeOutBackground(myGameObject);
     }
+
     /// <summary>
     /// Coroutine to smoothly zoom out the camera.
     /// </summary>
-    /// <param nameincrement">The amount to increase the orthographic size.</param>
+    /// <param name="increment">The amount to increase the orthographic size.</param>
     /// <returns></returns>
-    System.Collections.IEnumerator ZoomOut(float increment)
+    IEnumerator ZoomOut(float increment)
     {
         if (cineCamCamera == null)
         {
@@ -123,32 +123,28 @@ public class CameraZoomController : MonoBehaviour
         cineCamCamera.Lens.OrthographicSize = targetSize;
         Debug.Log($"Completed Zoom Out {zoomCount}: New orthographic size: {cineCamCamera.Lens.OrthographicSize}");
 
-        // TODO: Implement background fade out and fade in here
-        // Example:
-        // StartCoroutine(FadeBackground());
+        // Increase playerLevel in the ObjectInteractions script
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            ObjectInteractions playerInteractions = player.GetComponent<ObjectInteractions>();
+            if (playerInteractions != null)
+            {
+                playerInteractions.playerLevel++;
+                Debug.Log($"Player level increased to: {playerInteractions.playerLevel}");
+            }
+            else
+            {
+                Debug.LogError("ObjectInteractions script not found on Player!");
+            }
+        }
+        else
+        {
+            Debug.LogError("Player GameObject not found!");
+        }
 
-        // TODO: Adjust camera bounds to the new size if necessary
-        // Example:
-        // AdjustCameraBounds(targetSize);
+        // Reset zooming flag and increment zoom count
         isZooming = false;
         zoomCount++;
-
     }
-
-
-    // Optional: Coroutine for background fade effect
-    /*
-    private IEnumerator FadeBackground()
-    {
-        // Implement your background fade logic here
-        // This could involve fading UI elements or background sprites
-        yield return null;
-    }
-
-    // Optional: Method to adjust camera bounds based on new orthographic size
-    private void AdjustCameraBounds(float newSize)
-    {
-        // Implement your camera bounds adjustment logic here
-    }
-    */
 }
