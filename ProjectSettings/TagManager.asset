@@ -23,6 +23,7 @@ TagManager:
   - Lvl3
   - Lvl4
   - Lvl5
+  - CameraBounds
   layers:
   - Default
   - TransparentFX

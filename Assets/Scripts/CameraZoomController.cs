@@ -13,11 +13,20 @@ public class CameraZoomController : MonoBehaviour
     private int zoomCount = 0; // To track the current zoom stage
 
     // Define zoom thresholds and corresponding orthographic size increments
-    private float[] zoomThresholds = { 30f, 100f, 400f };
+    private float[] zoomThresholds = { 30f, 10000f, 400000f };
     private float[] zoomIncrements = { 5f, 10f, 15f };
 
     // Duration of each zoom transition in seconds
     public float zoomDuration = 1f;
+
+    // CameraBounds scaling values (single float per scale)
+    private float[] cameraBoundsScales = { 0.7509878f, 1.0f, 1.5f };
+
+    // Player speed values (single float per zoom stage)
+    private float[] playerSpeeds = { 10f, 15f, 20f };
+
+    private Transform cameraBoundsTransform;
+    private PlayerControls playerControls; // Reference to PlayerControls script
 
     void Start()
     {
@@ -50,11 +59,29 @@ public class CameraZoomController : MonoBehaviour
                 {
                     Debug.LogError("Player does not have an ObjectInteractions component.");
                 }
+
+                // Get PlayerControls component
+                playerControls = player.GetComponent<PlayerControls>();
+                if (playerControls == null)
+                {
+                    Debug.LogError("Player does not have a PlayerControls component.");
+                }
             }
             else
             {
                 Debug.LogError("No GameObject with tag 'Player' found.");
             }
+        }
+
+        // Find the CameraBounds GameObject by tag
+        GameObject cameraBounds = GameObject.FindGameObjectWithTag("CameraBounds");
+        if (cameraBounds != null)
+        {
+            cameraBoundsTransform = cameraBounds.transform;
+        }
+        else
+        {
+            Debug.LogError("No GameObject with tag 'CameraBounds' found.");
         }
     }
 
@@ -72,23 +99,9 @@ public class CameraZoomController : MonoBehaviour
         }
     }
 
-    void FadeBackground(GameObject level)
-    {
-        // Find the script in the scene
-        FadeOut fadeScript = FindObjectOfType<FadeOut>();
-
-        // Call the fade-out method on the target GameObject
-        // fadeScript.FadeOutBackground(myGameObject);
-    }
-
-    /// <summary>
-    /// Coroutine to smoothly zoom out the camera.
-    /// </summary>
-    /// <param name="increment">The amount to increase the orthographic size.</param>
-    /// <returns></returns>
     IEnumerator ZoomOut(float increment)
     {
-        if (cineCamCamera == null)
+        if (cineCamCamera == null || cameraBoundsTransform == null)
         {
             yield break;
         }
@@ -96,54 +109,68 @@ public class CameraZoomController : MonoBehaviour
         isZooming = true;
         Debug.Log($"Starting Zoom Out {zoomCount + 1}: Increasing orthographic size by {increment}");
 
-        // Get current orthographic size
+        // Update CameraBounds scale
+        if (zoomCount < cameraBoundsScales.Length)
+        {
+            float scale = cameraBoundsScales[zoomCount];
+            cameraBoundsTransform.localScale = new Vector3(scale, scale, scale);
+            Debug.Log($"Set CameraBounds scale to: {scale}");
+        }
+
+        // Update Player speed
+        if (playerControls != null && zoomCount < playerSpeeds.Length)
+        {
+            playerControls.maxMoveSpeed = playerSpeeds[zoomCount];
+            Debug.Log($"Updated Player maxMoveSpeed to: {playerControls.maxMoveSpeed}");
+        }
+
+        // Enable next level
+        if (zoomCount + 1 < levels.Length)
+        {
+            levels[zoomCount + 1].SetActive(true);
+            Debug.Log($"Enabled level {zoomCount + 2}");
+        }
+
+        // Disable current level
+        if (zoomCount < levels.Length)
+        {
+            levels[zoomCount].SetActive(false);
+            Debug.Log($"Disabled level {zoomCount + 1}");
+        }
+
+        // Start zooming out
         float currentSize = cineCamCamera.Lens.OrthographicSize;
         float targetSize = currentSize + increment;
 
         float elapsed = 0f;
 
-        // Fade Bg Out
-        FadeBackground(levels[zoomCount]);
-
         while (elapsed < zoomDuration)
         {
-            // Calculate normalized time
             float t = elapsed / zoomDuration;
-            // Apply ease-out cubic easing
             t = 1 - Mathf.Pow(1 - t, 3);
 
-            // Lerp the orthographic size
             cineCamCamera.Lens.OrthographicSize = Mathf.Lerp(currentSize, targetSize, t);
 
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        // Ensure the final size is set
         cineCamCamera.Lens.OrthographicSize = targetSize;
-        Debug.Log($"Completed Zoom Out {zoomCount}: New orthographic size: {cineCamCamera.Lens.OrthographicSize}");
 
-        // Increase playerLevel in the ObjectInteractions script
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
+        // Update Cinemachine Confiner
+        CinemachineConfiner confiner = cineCamCamera.GetComponent<CinemachineConfiner>();
+        if (confiner != null)
         {
-            ObjectInteractions playerInteractions = player.GetComponent<ObjectInteractions>();
-            if (playerInteractions != null)
-            {
-                playerInteractions.playerLevel++;
-                Debug.Log($"Player level increased to: {playerInteractions.playerLevel}");
-            }
-            else
-            {
-                Debug.LogError("ObjectInteractions script not found on Player!");
-            }
+            confiner.InvalidatePathCache();
+            Debug.Log("Confiner bounds updated.");
         }
         else
         {
-            Debug.LogError("Player GameObject not found!");
+            Debug.LogWarning("CinemachineConfiner component not found.");
         }
 
-        // Reset zooming flag and increment zoom count
+        Debug.Log($"Completed Zoom Out {zoomCount}: New orthographic size: {cineCamCamera.Lens.OrthographicSize}");
+
         isZooming = false;
         zoomCount++;
     }
