@@ -198,7 +198,7 @@ public class ObjectInteractions : MonoBehaviour
         // Update player scale
         ScalePlayer(size);
 
-        Debug.Log($"Consumed {collision.gameObject.tag}: PlayerSize={playerSize}, PlayerSizeCounter={playerSizeCounter}");
+        //Debug.Log($"Consumed {collision.gameObject.tag}: PlayerSize={playerSize}, PlayerSizeCounter={playerSizeCounter}");
 
         // Destroy the consumed object
         Destroy(collision.gameObject);

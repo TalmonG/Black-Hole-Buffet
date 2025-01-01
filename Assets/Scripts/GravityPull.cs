@@ -8,6 +8,9 @@ public class GravityPull : MonoBehaviour
     private Button button;              // Reference to the button
     private bool isCooldown = false;    // Track cooldown state
 
+    private float pullStrength = 10f;   // Strength of the pull effect
+    private float pullRadius = 5f;      // Radius of the pull effect
+
     void Start()
     {
         // Get the Button component on this GameObject
@@ -19,14 +22,37 @@ public class GravityPull : MonoBehaviour
             cooldownImage.fillAmount = 0;
     }
 
+    void OnDrawGizmosSelected()
+    {
+        // Draw the pull radius in the editor for testing purposes
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(player.transform.position, pullRadius);
+        }
+    }
+
     void ActivateGravityPull()
     {
         if (isCooldown) return;
 
-        // Perform the gravity pull functionality
         Debug.Log("Gravity Pull activated!");
 
-        // Add your gravity pull logic here (e.g., pulling objects toward the player)
+        // Perform the gravity pull functionality
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            Collider[] colliders = Physics.OverlapSphere(player.transform.position, pullRadius);
+            foreach (Collider collider in colliders)
+            {
+                if (collider.CompareTag("Ant"))
+                {
+                    Vector3 direction = player.transform.position - collider.transform.position;
+                    collider.attachedRigidbody?.AddForce(direction.normalized * pullStrength, ForceMode.Impulse);
+                }
+            }
+        }
 
         // Start the cooldown process
         StartCooldown();
