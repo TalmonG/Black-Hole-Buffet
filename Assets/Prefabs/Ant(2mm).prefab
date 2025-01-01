@@ -293,6 +293,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 2
   changeDirectionTime: 2
+  wanderTowardsPlayerChance: 0.5
 --- !u!50 &7501744685956303776
 Rigidbody2D:
   serializedVersion: 5
@@ -301,14 +302,14 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3386255190343275724}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2

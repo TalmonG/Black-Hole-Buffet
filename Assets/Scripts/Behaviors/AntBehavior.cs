@@ -15,6 +15,8 @@ public class AntBehavior : MonoBehaviour
     private Vector2 wanderDirection;
     private float antSize;
 
+    public bool isBeingPulled = false; // Flag to track if the ant is being pulled
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -45,7 +47,7 @@ public class AntBehavior : MonoBehaviour
 
     void Update()
     {
-        if (player == null || playerInteractions == null) return;
+        if (player == null || playerInteractions == null || isBeingPulled) return;
 
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
         Vector2 targetDirection;
@@ -82,6 +84,8 @@ public class AntBehavior : MonoBehaviour
     {
         while (true)
         {
+            if (isBeingPulled) yield break; // Stop wandering while being pulled
+
             // Determine whether to wander toward the player
             if (Random.value < wanderTowardsPlayerChance)
             {
@@ -115,7 +119,6 @@ public class AntBehavior : MonoBehaviour
 
     private void RotateToFaceMovement()
     {
-        // Get the current velocity direction
         Vector2 velocity = rb.linearVelocity;
 
         if (velocity.magnitude > 0.01f) // Only rotate if moving

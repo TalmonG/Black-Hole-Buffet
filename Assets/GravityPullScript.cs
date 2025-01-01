@@ -1,15 +1,15 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GravityPull : MonoBehaviour
+public class GravityPullScript : MonoBehaviour
 {
     public float cooldownDuration = 5f;  // Cooldown duration in seconds
     public Image cooldownImage;         // Reference to the cooldown overlay
     private Button button;              // Reference to the button
     private bool isCooldown = false;    // Track cooldown state
 
-    private float pullStrength = 10f;   // Strength of the pull effect
-    private float pullRadius = 5f;      // Radius of the pull effect
+    public float pullStrength = 10f;   // Strength of the pull effect
+    public float pullRadius = 5f;      // Radius of the pull effect
 
     void Start()
     {
@@ -43,13 +43,27 @@ public class GravityPull : MonoBehaviour
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
-            Collider[] colliders = Physics.OverlapSphere(player.transform.position, pullRadius);
-            foreach (Collider collider in colliders)
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(player.transform.position, pullRadius);
+            foreach (Collider2D collider in colliders)
             {
                 if (collider.CompareTag("Ant"))
                 {
-                    Vector3 direction = player.transform.position - collider.transform.position;
-                    collider.attachedRigidbody?.AddForce(direction.normalized * pullStrength, ForceMode.Impulse);
+                    // Disable ant movement by disabling AntBehavior script
+                    AntBehavior antBehavior = collider.GetComponent<AntBehavior>();
+                    if (antBehavior != null)
+                    {
+                        antBehavior.enabled = false;
+                    }
+
+                    // Pull ant toward player
+                    Rigidbody2D rb = collider.attachedRigidbody;
+                    if (rb != null)
+                    {
+                        rb.linearVelocity = Vector2.zero; // Stop current motion
+                        Vector2 direction = (Vector2)(player.transform.position - collider.transform.position);
+                        rb.AddForce(direction.normalized * pullStrength, ForceMode2D.Impulse);
+                        Debug.Log($"Pulling Ant: {collider.gameObject.name}");
+                    }
                 }
             }
         }
