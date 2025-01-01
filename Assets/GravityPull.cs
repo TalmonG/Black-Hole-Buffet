@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GravityPullScript : MonoBehaviour
+public class GravityPull : MonoBehaviour
 {
     public float cooldownDuration = 5f;  // Cooldown duration in seconds
     public Image cooldownImage;         // Reference to the cooldown overlay
@@ -63,6 +63,9 @@ public class GravityPullScript : MonoBehaviour
                         Vector2 direction = (Vector2)(player.transform.position - collider.transform.position);
                         rb.AddForce(direction.normalized * pullStrength, ForceMode2D.Impulse);
                         Debug.Log($"Pulling Ant: {collider.gameObject.name}");
+
+                        // Re-enable AntBehavior script after pulling
+                        StartCoroutine(ReenableAntBehavior(antBehavior, 1f));
                     }
                 }
             }
@@ -70,6 +73,15 @@ public class GravityPullScript : MonoBehaviour
 
         // Start the cooldown process
         StartCooldown();
+    }
+
+    System.Collections.IEnumerator ReenableAntBehavior(AntBehavior antBehavior, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (antBehavior != null)
+        {
+            antBehavior.enabled = true;
+        }
     }
 
     void StartCooldown()

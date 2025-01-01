@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8202044595761331705}
   - component: {fileID: 2380803906390386696}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: DetectionCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -81,7 +81,7 @@ GameObject:
   - component: {fileID: 2171868636529060867}
   - component: {fileID: 9187271626115900577}
   - component: {fileID: 7501744685956303776}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Ant(2mm)
   m_TagString: Ant
   m_Icon: {fileID: 0}
@@ -294,6 +294,7 @@ MonoBehaviour:
   speed: 2
   changeDirectionTime: 2
   wanderTowardsPlayerChance: 0.5
+  isBeingPulled: 0
 --- !u!50 &7501744685956303776
 Rigidbody2D:
   serializedVersion: 5

@@ -988,7 +988,7 @@ GameObject:
   m_Component:
   - component: {fileID: 428632357}
   - component: {fileID: 428632358}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: RightBoundry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2269,7 +2269,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 927679737}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a70c90063c68b34e90ba0fcb3b41703, type: 3}
+  m_Script: {fileID: 11500000, guid: 523c532361112b74f821b5e3586aa970, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cooldownDuration: 5
@@ -4637,7 +4637,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1159036487}
   - component: {fileID: 1159036488}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: TopBoundry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5062,7 +5062,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1439232727}
   - component: {fileID: 1439232728}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: LeftBoundry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6266,7 +6266,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1962999401}
   - component: {fileID: 1962999402}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: BottomBoundry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6815,9 +6815,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 52986985515718545, guid: d74374ed61ab03842950c9fd668feb2f, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 1230181429599934963, guid: d74374ed61ab03842950c9fd668feb2f, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 1230181429599934963, guid: d74374ed61ab03842950c9fd668feb2f, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4234431546566051763, guid: d74374ed61ab03842950c9fd668feb2f, type: 3}
       propertyPath: m_LocalPosition.x
