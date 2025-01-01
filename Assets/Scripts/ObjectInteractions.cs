@@ -143,7 +143,7 @@ public class ObjectInteractions : MonoBehaviour
                 break;
             case "Leaf":
                 measurement = 14f;
-                size = 1.4f;
+                size = 0.9f;
                 break;
             case "Coin":
                 measurement = 19f;

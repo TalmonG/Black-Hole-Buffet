@@ -13,17 +13,17 @@ public class CameraZoomController : MonoBehaviour
     private int zoomCount = 0; // To track the current zoom stage
 
     // Define zoom thresholds and corresponding orthographic size increments
-    private float[] zoomThresholds = { 30f, 120f, 400000f };
-    private float[] zoomIncrements = { 5f, 10f, 15f };
+    private float[] zoomThresholds = { 30f, 120f, 200f };
+    private float[] zoomIncrements = { 5f, 15f, 30f };
 
     // Duration of each zoom transition in seconds
     public float zoomDuration = 1f;
 
     // CameraBounds scaling values (single float per scale)
-    private float[] cameraBoundsScales = { 0.7509878f, 1.0f, 1.5f };
+    private float[] cameraBoundsScales = { 0.7509878f, 1.548001f, 2.0f };
 
     // Player speed values (single float per zoom stage)
-    private float[] playerSpeeds = { 10f, 15f, 20f };
+    private float[] playerSpeeds = { 10f, 20f, 50f };
 
     private Transform cameraBoundsTransform;
     private PlayerControls playerControls; // Reference to PlayerControls script
