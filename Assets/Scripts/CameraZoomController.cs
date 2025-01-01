@@ -13,7 +13,7 @@ public class CameraZoomController : MonoBehaviour
     private int zoomCount = 0; // To track the current zoom stage
 
     // Define zoom thresholds and corresponding orthographic size increments
-    private float[] zoomThresholds = { 30f, 10000f, 400000f };
+    private float[] zoomThresholds = { 30f, 120f, 400000f };
     private float[] zoomIncrements = { 5f, 10f, 15f };
 
     // Duration of each zoom transition in seconds
@@ -27,6 +27,9 @@ public class CameraZoomController : MonoBehaviour
 
     private Transform cameraBoundsTransform;
     private PlayerControls playerControls; // Reference to PlayerControls script
+
+    private AudioManager audioManager;
+
 
     void Start()
     {
@@ -47,6 +50,18 @@ public class CameraZoomController : MonoBehaviour
                 Debug.LogError("No GameObject with tag 'CineCam' found.");
             }
         }
+
+        // AudioManager
+        GameObject audioManagerObject = GameObject.FindGameObjectWithTag("AudioManager");
+        if (audioManagerObject != null)
+        {
+            audioManager = audioManagerObject.GetComponent<AudioManager>();
+        }
+        else
+        {
+            Debug.LogWarning("AudioManager not found in the scene!");
+        }
+
 
         // Find the Player GameObject by tag and get its ObjectInteractions component
         if (objectInteractions == null)
@@ -107,6 +122,8 @@ public class CameraZoomController : MonoBehaviour
         }
 
         isZooming = true;
+        audioManager?.Play("ZoomOut");
+
         Debug.Log($"Starting Zoom Out {zoomCount + 1}: Increasing orthographic size by {increment}");
 
         // Update CameraBounds scale

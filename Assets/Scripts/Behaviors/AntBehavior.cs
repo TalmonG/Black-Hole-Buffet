@@ -10,6 +10,7 @@ public class AntBehavior : MonoBehaviour
     public float speed = 2f; // Movement speed
     public float changeDirectionTime = 5f; // Time to change wandering direction
     public float wanderTowardsPlayerChance = 0.5f; // Chance to wander closer to the player (0 = never, 1 = always)  KEEP MINIMUM 0.2
+    public float detectionRadius = 3f;
 
     private Vector2 currentDirection;
     private Vector2 wanderDirection;
@@ -52,7 +53,7 @@ public class AntBehavior : MonoBehaviour
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
         Vector2 targetDirection;
 
-        if (distanceToPlayer < 5f) // Detection radius
+        if (distanceToPlayer < detectionRadius) // Detection radius
         {
             if (playerInteractions.playerSize > antSize)
             {

@@ -9,7 +9,7 @@ public class GravityPull : MonoBehaviour
     private bool isCooldown = false;    // Track cooldown state
 
     public float pullStrength = 10f;   // Strength of the pull effect
-    public float pullRadius = 5f;      // Radius of the pull effect
+    public float basePullRadius = 30f;  // Base radius to be multiplied by player size
 
     void Start()
     {
@@ -28,6 +28,7 @@ public class GravityPull : MonoBehaviour
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
+            float pullRadius = CalculatePullRadius(player.transform);
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(player.transform.position, pullRadius);
         }
@@ -43,6 +44,7 @@ public class GravityPull : MonoBehaviour
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
+            float pullRadius = CalculatePullRadius(player.transform);
             Collider2D[] colliders = Physics2D.OverlapCircleAll(player.transform.position, pullRadius);
             foreach (Collider2D collider in colliders)
             {
@@ -73,6 +75,12 @@ public class GravityPull : MonoBehaviour
 
         // Start the cooldown process
         StartCooldown();
+    }
+
+    float CalculatePullRadius(Transform playerTransform)
+    {
+        // Calculate pull radius based on player size
+        return basePullRadius * playerTransform.localScale.x;
     }
 
     System.Collections.IEnumerator ReenableAntBehavior(AntBehavior antBehavior, float delay)

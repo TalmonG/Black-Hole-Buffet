@@ -291,7 +291,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd33f26b3dd085749a86a0a84656f370, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
+  speed: 1.5
   changeDirectionTime: 2
   wanderTowardsPlayerChance: 0.5
   isBeingPulled: 0
