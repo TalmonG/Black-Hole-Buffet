@@ -24,6 +24,7 @@ TagManager:
   - Lvl4
   - Lvl5
   - CameraBounds
+  - DeleteArea
   layers:
   - Default
   - TransparentFX

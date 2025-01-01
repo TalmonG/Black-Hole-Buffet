@@ -9,6 +9,8 @@ public class AntBehavior : MonoBehaviour
 
     public float speed = 2f; // Movement speed
     public float changeDirectionTime = 5f; // Time to change wandering direction
+    public float wanderTowardsPlayerChance = 0.5f; // Chance to wander closer to the player (0 = never, 1 = always)  KEEP MINIMUM 0.2
+
     private Vector2 currentDirection;
     private Vector2 wanderDirection;
     private float antSize;
@@ -80,8 +82,19 @@ public class AntBehavior : MonoBehaviour
     {
         while (true)
         {
-            // Generate a new random wandering direction
-            wanderDirection = Random.insideUnitCircle.normalized;
+            // Determine whether to wander toward the player
+            if (Random.value < wanderTowardsPlayerChance)
+            {
+                // Generate a wandering direction biased toward the player
+                Vector2 toPlayer = (player.position - transform.position).normalized;
+                wanderDirection = Vector2.Lerp(Random.insideUnitCircle.normalized, toPlayer, 0.5f).normalized;
+            }
+            else
+            {
+                // Generate a random wandering direction
+                wanderDirection = Random.insideUnitCircle.normalized;
+            }
+
             yield return new WaitForSeconds(changeDirectionTime);
         }
     }

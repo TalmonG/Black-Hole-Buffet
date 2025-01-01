@@ -97,10 +97,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4234431546566051763}
   - component: {fileID: 8938601406595964269}
+  - component: {fileID: 7098854637536976571}
   - component: {fileID: 8924239129917865571}
   - component: {fileID: 2532091629235155991}
   - component: {fileID: 5424443997669033952}
-  - component: {fileID: 7098854637536976571}
   - component: {fileID: 3657585005035747723}
   m_Layer: 0
   m_Name: Player
@@ -180,6 +180,26 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &7098854637536976571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1230181429599934963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d16df89dd2a48014c9f1a0b2934724f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 1230181429599934963}
+  playerLevel: 1
+  text: {fileID: 0}
+  playerSize: 0.2
+  playerSizeCounter: 2
+  consumeHistoryIcon: {fileID: 0}
+  grainOfSandIcon: {fileID: -5882777961285432967, guid: 0f48938357f965343845fc885739b8e4, type: 3}
+  antIcon: {fileID: -767842634614617014, guid: 40bd0ef7da2fa354f98eacd779a02d76, type: 3}
 --- !u!114 &8924239129917865571
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -262,25 +282,6 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 3.5
---- !u!114 &7098854637536976571
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1230181429599934963}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d16df89dd2a48014c9f1a0b2934724f9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 1230181429599934963}
-  text: {fileID: 0}
-  playerSize: 0.2
-  playerSizeCounter: 2
-  consumeHistoryIcon: {fileID: 0}
-  grainOfSandIcon: {fileID: -5882777961285432967, guid: 0f48938357f965343845fc885739b8e4, type: 3}
-  antIcon: {fileID: -767842634614617014, guid: 40bd0ef7da2fa354f98eacd779a02d76, type: 3}
 --- !u!58 &3657585005035747723
 CircleCollider2D:
   m_ObjectHideFlags: 0
