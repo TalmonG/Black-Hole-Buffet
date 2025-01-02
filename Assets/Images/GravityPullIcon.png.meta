@@ -160,7 +160,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      GravityPullIcon_0: 8308761207999641021
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
