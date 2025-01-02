@@ -39,47 +39,45 @@ public class SpawnerManager : MonoBehaviour
         {
             if (playerInteractions != null)
             {
-                // Update the player level
-                playerLevel = Mathf.Clamp(playerInteractions.playerLevel, 1, 5);
+                // Fetch the player level dynamically each loop
+                playerLevel = Mathf.Clamp(playerInteractions.playerLevel, 1, 3);
+                Debug.Log($"Player level: {playerLevel}");
 
                 // Spawn settings based on player level
-                switch (playerLevel)
-                {
-                    case 1:
-                        yield return SpawnLevel(new int[] { 0 }, 0.5f); // Level 1: Spawn creature at index 0 every 5 seconds
-                        break;
-                    case 2:
-                        yield return SpawnLevel(new int[] { 0, 1 }, 0.25f); // Level 2: Spawn creatures at indices 0 and 1 every 3 seconds
-                        break;
-                    case 3:
-                        yield return SpawnLevel(new int[] { 0, 1 }, 2f); // Level 3: Spawn creatures at indices 0 and 1 every 2 seconds
-                        break;
-                    // case 4:
-                    //     yield return SpawnLevel(new int[] { 0, 1, 2 }, 1.5f); // Level 4: Spawn creatures at indices 0, 1, and 2 every 1.5 seconds
-                    //     break;
-                    // case 5:
-                    //     yield return SpawnLevel(new int[] { 0, 1, 2 }, 1f); // Level 5: Spawn creatures at indices 0, 1, and 2 every 1 second
-                    //     break;
-                }
+                float spawnRate = GetSpawnRate(playerLevel);
+
+                // Spawn a creature
+                yield return SpawnLevel(spawnRate);
             }
             else
             {
-                yield return null;
+                Debug.LogError("PlayerInteractions is null.");
+                yield return null; // Wait until playerInteractions is not null
             }
         }
     }
 
-    private IEnumerator SpawnLevel(int[] creatureIndices, float spawnRate)
+    private IEnumerator SpawnLevel(float spawnRate)
     {
         // Randomly select a spawner
         Transform spawner = GetRandomSpawner();
+        Debug.Log($"Selected spawner: {spawner.name}");
 
-        // Randomly select a creature index from the level's allowed indices
-        int randomIndex = creatureIndices[Random.Range(0, creatureIndices.Length)];
+        // Randomly select a creature index using level-based probabilities
+        int randomIndex = GetCreatureIndexWithChance(playerLevel);
+        Debug.Log($"Spawning creature at index: {randomIndex}");
 
         // Spawn the selected creature prefab
         GameObject creatureToSpawn = creatures[randomIndex];
-        Instantiate(creatureToSpawn, spawner.position, Quaternion.identity);
+        if (creatureToSpawn == null)
+        {
+            Debug.LogError($"Creature prefab at index {randomIndex} is null!");
+        }
+        else
+        {
+            Debug.Log($"Spawning creature: {creatureToSpawn.name}");
+            Instantiate(creatureToSpawn, spawner.position, Quaternion.identity);
+        }
 
         // Wait for the spawn rate
         yield return new WaitForSeconds(spawnRate);
@@ -88,5 +86,42 @@ public class SpawnerManager : MonoBehaviour
     private Transform GetRandomSpawner()
     {
         return spawners[Random.Range(1, spawners.Length)];
+    }
+
+    private float GetSpawnRate(int level)
+    {
+        switch (level)
+        {
+            case 1: return 0.5f; // Level 1: Spawn every 0.5 seconds
+            case 2: return 0.25f; // Level 2: Spawn every 0.25 seconds
+            case 3: return 2f; // Level 3: Spawn every 2 seconds
+            default: return 1f; // Default spawn rate
+        }
+    }
+
+    private int GetCreatureIndexWithChance(int level)
+    {
+        int randomValue = Random.Range(1, 101); // Random value between 1 and 100
+
+        switch (level)
+        {
+            case 1:
+                // Level 1: Ant = 100%, Ladybug = 0%
+                return 0; // Always spawn ant
+            case 2:
+                // Level 2: Ant = 60%, Ladybug = 40%
+                if (randomValue <= 80)
+                    return 0; // Spawn ant
+                else
+                    return 1; // Spawn ladybug
+            case 3:
+                // Level 3: Ant = 30%, Ladybug = 70%
+                if (randomValue <= 50)
+                    return 0; // Spawn ant
+                else
+                    return 1; // Spawn ladybug
+            default:
+                return 0; // Default to ant
+        }
     }
 }

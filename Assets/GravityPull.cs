@@ -5,8 +5,10 @@ public class GravityPull : MonoBehaviour
 {
     public float cooldownDuration = 5f;  // Cooldown duration in seconds
     public Image cooldownImage;         // Reference to the cooldown overlay
+    public GameObject tutorialGameObject; // Reference to the tutorial GameObject
     private Button button;              // Reference to the button
     private bool isCooldown = false;    // Track cooldown state
+    private bool tutorialActive = true; // Track if the tutorial is active
 
     public float pullStrength = 10f;   // Strength of the pull effect
     public float basePullRadius = 30f;  // Base radius to be multiplied by player size
@@ -20,6 +22,12 @@ public class GravityPull : MonoBehaviour
         // Ensure the cooldownImage starts empty
         if (cooldownImage != null)
             cooldownImage.fillAmount = 0;
+
+        // Enable the tutorial GameObject at the start
+        if (tutorialGameObject != null)
+        {
+            tutorialGameObject.SetActive(true);
+        }
     }
 
     void OnDrawGizmosSelected()
@@ -36,6 +44,11 @@ public class GravityPull : MonoBehaviour
 
     void ActivateGravityPull()
     {
+        if (tutorialActive)
+        {
+            DisableTutorial();
+        }
+
         if (isCooldown) return;
 
         Debug.Log("Gravity Pull activated!");
@@ -50,25 +63,11 @@ public class GravityPull : MonoBehaviour
             {
                 if (collider.CompareTag("Ant"))
                 {
-                    // Disable ant movement by disabling AntBehavior script
-                    AntBehavior antBehavior = collider.GetComponent<AntBehavior>();
-                    if (antBehavior != null)
-                    {
-                        antBehavior.enabled = false;
-                    }
-
-                    // Pull ant toward player
-                    Rigidbody2D rb = collider.attachedRigidbody;
-                    if (rb != null)
-                    {
-                        rb.linearVelocity = Vector2.zero; // Stop current motion
-                        Vector2 direction = (Vector2)(player.transform.position - collider.transform.position);
-                        rb.AddForce(direction.normalized * pullStrength, ForceMode2D.Impulse);
-                        Debug.Log($"Pulling Ant: {collider.gameObject.name}");
-
-                        // Re-enable AntBehavior script after pulling
-                        StartCoroutine(ReenableAntBehavior(antBehavior, 1f));
-                    }
+                    PullObject(collider, typeof(AntBehavior));
+                }
+                else if (collider.CompareTag("Ladybug"))
+                {
+                    PullObject(collider, typeof(LadybugBehavior));
                 }
             }
         }
@@ -77,18 +76,51 @@ public class GravityPull : MonoBehaviour
         StartCooldown();
     }
 
+    void DisableTutorial()
+    {
+        if (tutorialGameObject != null)
+        {
+            tutorialGameObject.SetActive(false);
+        }
+        tutorialActive = false; // Ensure it doesn't show again
+    }
+
+    void PullObject(Collider2D collider, System.Type behaviorType)
+    {
+        // Disable behavior script
+        MonoBehaviour behavior = (MonoBehaviour)collider.GetComponent(behaviorType);
+        if (behavior != null)
+        {
+            behavior.enabled = false;
+        }
+
+        // Pull object toward player
+        Rigidbody2D rb = collider.attachedRigidbody;
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (rb != null && player != null)
+        {
+            rb.linearVelocity = Vector2.zero; // Stop current motion
+            Vector2 direction = (Vector2)(player.transform.position - collider.transform.position);
+            rb.AddForce(direction.normalized * pullStrength, ForceMode2D.Impulse);
+            Debug.Log($"Pulling {collider.gameObject.tag}: {collider.gameObject.name}");
+
+            // Re-enable behavior script after pulling
+            StartCoroutine(ReenableBehavior(behavior, 1f));
+        }
+    }
+
     float CalculatePullRadius(Transform playerTransform)
     {
         // Calculate pull radius based on player size
         return basePullRadius * playerTransform.localScale.x;
     }
 
-    System.Collections.IEnumerator ReenableAntBehavior(AntBehavior antBehavior, float delay)
+    System.Collections.IEnumerator ReenableBehavior(MonoBehaviour behavior, float delay)
     {
         yield return new WaitForSeconds(delay);
-        if (antBehavior != null)
+        if (behavior != null)
         {
-            antBehavior.enabled = true;
+            behavior.enabled = true;
         }
     }
 

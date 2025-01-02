@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class LadyBugBehavior : MonoBehaviour
+public class LadybugBehavior : MonoBehaviour
 {
     private Transform player;
     private ObjectInteractions playerInteractions;

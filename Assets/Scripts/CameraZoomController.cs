@@ -20,7 +20,7 @@ public class CameraZoomController : MonoBehaviour
     public float zoomDuration = 1f;
 
     // CameraBounds scaling values (single float per scale)
-    private float[] cameraBoundsScales = { 0.7509878f, 1.548001f };
+    private float[] cameraBoundsScales = { 0.7509878f, 1.23f };
 
     // Player speed values (single float per zoom stage)
     private float[] playerSpeeds = { 10f, 20f };
@@ -123,6 +123,7 @@ public class CameraZoomController : MonoBehaviour
 
         isZooming = true;
         audioManager?.Play("ZoomOut");
+        objectInteractions.playerLevel++;
 
         Debug.Log($"Starting Zoom Out {zoomCount + 1}: Increasing orthographic size by {increment}");
 
