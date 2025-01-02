@@ -49,11 +49,11 @@ public class SpawnerManager : MonoBehaviour
                         yield return SpawnLevel(new int[] { 0 }, 0.5f); // Level 1: Spawn creature at index 0 every 5 seconds
                         break;
                     case 2:
-                        yield return SpawnLevel(new int[] { 0 }, 0.25f); // Level 2: Spawn creatures at indices 0 and 1 every 3 seconds
+                        yield return SpawnLevel(new int[] { 0, 1 }, 0.25f); // Level 2: Spawn creatures at indices 0 and 1 every 3 seconds
                         break;
-                    // case 3:
-                    //     yield return SpawnLevel(new int[] { 0, 1 }, 2f); // Level 3: Spawn creatures at indices 0 and 1 every 2 seconds
-                    //     break;
+                    case 3:
+                        yield return SpawnLevel(new int[] { 0, 1 }, 2f); // Level 3: Spawn creatures at indices 0 and 1 every 2 seconds
+                        break;
                     // case 4:
                     //     yield return SpawnLevel(new int[] { 0, 1, 2 }, 1.5f); // Level 4: Spawn creatures at indices 0, 1, and 2 every 1.5 seconds
                     //     break;
@@ -87,6 +87,6 @@ public class SpawnerManager : MonoBehaviour
 
     private Transform GetRandomSpawner()
     {
-        return spawners[Random.Range(0, spawners.Length)];
+        return spawners[Random.Range(1, spawners.Length)];
     }
 }

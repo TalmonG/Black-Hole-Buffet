@@ -18,8 +18,14 @@ public class ObjectInteractions : MonoBehaviour
     public Image consumeHistoryIcon;
 
     // Icons
-    public Sprite grainOfSandIcon; 
-    public Sprite antIcon; 
+    public Sprite grainOfSandIcon;
+    public Sprite antIcon;
+        public Sprite pebbleIcon;
+    public Sprite ladybugIcon;
+    public Sprite leafIcon;
+    public Sprite coinIcon;
+    // public Sprite antIcon;
+
     // Add other icons as needed
 
     void Start()
@@ -143,7 +149,7 @@ public class ObjectInteractions : MonoBehaviour
                 break;
             case "Leaf":
                 measurement = 14f;
-                size = 0.9f;
+                size = 3.5f;
                 break;
             case "Coin":
                 measurement = 19f;
@@ -181,6 +187,20 @@ public class ObjectInteractions : MonoBehaviour
                 return grainOfSandIcon;
             case "Ant":
                 return antIcon;
+            case "Pebble":
+                return pebbleIcon;
+            case "Ladybug":
+                return ladybugIcon;
+            case "Leaf":
+                return leafIcon;
+            // case "Coin":
+            //     return coinIcon;
+            // case "SmallFlower":
+            //     return smallFlowerIcon;
+            // case "Feather":
+            //     return featherIcon;
+
+
             // Add cases for other tags and their corresponding icons
             default:
                 return null;
