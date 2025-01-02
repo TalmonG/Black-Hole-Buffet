@@ -36,7 +36,7 @@ public class WinScript : MonoBehaviour
     void Update()
     {
         // Check if playerInteractions is valid and playerSizeCounter is 200 or higher
-        if (playerInteractions != null && playerInteractions.playerSizeCounter >= 600)
+        if (playerInteractions != null && playerInteractions.playerSizeCounter >= 590)
         {
             // Pause the game
             Time.timeScale = 0;
