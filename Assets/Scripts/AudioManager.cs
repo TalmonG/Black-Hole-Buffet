@@ -10,7 +10,7 @@ public class Sound
     public AudioClip clip;
     [Range(0f, 1f)] public float volume = 0.5f;
     [Range(0.1f, 3f)] public float pitch = 1f;
-    public bool loop; // Add this property to define if the sound should loop
+    public bool loop;
     [HideInInspector] public AudioSource source;
 }
 
@@ -28,11 +28,10 @@ public class AudioManager : MonoBehaviour
             s.source.volume = s.volume;
             s.source.pitch = s.pitch;
 
-            // Set the loop property
             s.source.loop = s.loop;
         }
 
-        // Play the background music
+        // Play background music
         Play("BGMusic");
     }
 

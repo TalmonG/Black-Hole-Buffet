@@ -3,36 +3,37 @@ using UnityEngine.UI;
 
 public class GravityPull : MonoBehaviour
 {
-    public float cooldownDuration = 5f;  // Cooldown duration in seconds
-    public Image cooldownImage;         // Reference to the cooldown overlay
-    public GameObject tutorialGameObject; // Reference to the tutorial GameObject
-    private Button button;              // Reference to the button
-    private bool isCooldown = false;    // Track cooldown state
-    private bool tutorialActive = true; // Track if the tutorial is active
+    public float cooldownDuration = 5f;
+    public Image cooldownImage;
+    public GameObject tutorialGameObject;
+    private Button button;
+    private bool isCooldown = false;
+    private bool tutorialActive = true;
 
-    public float pullStrength = 10f;   // Strength of the pull effect
-    public float basePullRadius = 30f;  // Base radius to be multiplied by player size
+    public float pullStrength = 10f;
+    public float basePullRadius = 30f;
 
     void Start()
     {
-        // Get the Button component on this GameObject
+        // Get Button component on GameObject
         button = GetComponent<Button>();
         button.onClick.AddListener(ActivateGravityPull);
 
-        // Ensure the cooldownImage starts empty
+        // Set cooldownImage empty
         if (cooldownImage != null)
             cooldownImage.fillAmount = 0;
 
-        // Enable the tutorial GameObject at the start
+        // Enable tutorial GameObject at start
         if (tutorialGameObject != null)
         {
             tutorialGameObject.SetActive(true);
         }
     }
 
+    // DONT NEED THIS BELOW
     void OnDrawGizmosSelected()
     {
-        // Draw the pull radius in the editor for testing purposes
+        // Draw radius for testing purpose
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
@@ -53,7 +54,7 @@ public class GravityPull : MonoBehaviour
 
         Debug.Log("Gravity Pull activated!");
 
-        // Perform the gravity pull functionality
+        // do gravity pull
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
@@ -72,7 +73,7 @@ public class GravityPull : MonoBehaviour
             }
         }
 
-        // Start the cooldown process
+        // Start cooldown
         StartCooldown();
     }
 
@@ -82,24 +83,24 @@ public class GravityPull : MonoBehaviour
         {
             tutorialGameObject.SetActive(false);
         }
-        tutorialActive = false; // Ensure it doesn't show again
+        tutorialActive = false; 
     }
 
     void PullObject(Collider2D collider, System.Type behaviorType)
     {
-        // Disable behavior script
+        // Disable insect behavior script when pulling
         MonoBehaviour behavior = (MonoBehaviour)collider.GetComponent(behaviorType);
         if (behavior != null)
         {
             behavior.enabled = false;
         }
 
-        // Pull object toward player
+        // Pull insect toward player
         Rigidbody2D rb = collider.attachedRigidbody;
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (rb != null && player != null)
         {
-            rb.linearVelocity = Vector2.zero; // Stop current motion
+            rb.linearVelocity = Vector2.zero; // Stop
             Vector2 direction = (Vector2)(player.transform.position - collider.transform.position);
             rb.AddForce(direction.normalized * pullStrength, ForceMode2D.Impulse);
             Debug.Log($"Pulling {collider.gameObject.tag}: {collider.gameObject.name}");
@@ -127,10 +128,10 @@ public class GravityPull : MonoBehaviour
     void StartCooldown()
     {
         isCooldown = true;
-        button.interactable = false; // Disable the button during cooldown
+        button.interactable = false; // Disable button during cooldown
 
         if (cooldownImage != null)
-            cooldownImage.fillAmount = 1; // Start the cooldown visual
+            cooldownImage.fillAmount = 1; // Start cooldown visual
 
         StartCoroutine(CooldownRoutine());
     }
@@ -139,7 +140,7 @@ public class GravityPull : MonoBehaviour
     {
         float timeElapsed = 0;
 
-        // Gradually reduce the cooldown image's fill amount
+        // Gradually reduce cooldown image's fill amount
         while (timeElapsed < cooldownDuration)
         {
             timeElapsed += Time.deltaTime;
@@ -150,7 +151,7 @@ public class GravityPull : MonoBehaviour
 
         // Reset cooldown
         isCooldown = false;
-        button.interactable = true; // Re-enable the button
+        button.interactable = true; // Re-enable button
         if (cooldownImage != null)
             cooldownImage.fillAmount = 0; // Reset visual
     }

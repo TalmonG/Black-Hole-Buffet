@@ -6,7 +6,7 @@ public class ObjectInteractions : MonoBehaviour
 {
     public GameObject player;
     public int playerLevel = 1;
-    public TextMeshProUGUI text;  // Reference to the UI TextMeshProUGUI component
+    public TextMeshProUGUI text;
     public float playerSize = 0.2f;
     public float playerSizeCounter = 2f;
 
@@ -20,62 +20,55 @@ public class ObjectInteractions : MonoBehaviour
     // Icons
     public Sprite grainOfSandIcon;
     public Sprite antIcon;
-        public Sprite pebbleIcon;
+    public Sprite pebbleIcon;
     public Sprite ladybugIcon;
     public Sprite leafIcon;
     public Sprite coinIcon;
     // public Sprite antIcon;
-
-    // Add other icons as needed
 
     void Start()
     {
         // Consume History
         GameObject consumeHistoryTextObj = GameObject.FindGameObjectWithTag("ConsumeHistoryText");
         if (consumeHistoryTextObj != null)
+        {
             consumeHistoryText = consumeHistoryTextObj.GetComponent<TextMeshProUGUI>();
-        else
-            Debug.LogError("ConsumeHistoryText GameObject not found!");
-
+        }
         GameObject consumeHistoryIconObj = GameObject.FindGameObjectWithTag("ConsumeHistoryIcon");
         if (consumeHistoryIconObj != null)
+        {
             consumeHistoryIcon = consumeHistoryIconObj.GetComponent<Image>();
-        else
-            Debug.LogError("ConsumeHistoryIcon GameObject not found!");
-
-        // AudioManager
+        }
+        // find AudioManager
         GameObject audioManagerObject = GameObject.FindGameObjectWithTag("AudioManager");
         if (audioManagerObject != null)
         {
             audioManager = audioManagerObject.GetComponent<AudioManager>();
         }
-        else
-        {
-            Debug.LogWarning("AudioManager not found in the scene!");
-        }
 
-        // Colliders
+        // origanising colliders
         Collider2D[] colliders = player.GetComponents<Collider2D>();
         if (colliders.Length > 1)
         {
-            mainCollider = colliders[0];  // Main Collider
-            triggerCollider = colliders[1];  // Trigger Collider
+            mainCollider = colliders[0];  // main collider
+            triggerCollider = colliders[1];  // trigger collider
         }
 
         UpdateText();
-        Debug.Log("Initial Player Size: " + playerSize);
-        Debug.Log("Initial Player Size Counter: " + playerSizeCounter);
+        //Debug.Log("Initial player size: " + playerSize);
+        //Debug.Log("Initial player size counter: " + playerSizeCounter);
     }
 
     void UpdateText()
     {
+        // THIS MATH NOT MATHING UGHHHH, still works tho
         if (playerSizeCounter >= 1 && playerSizeCounter < 10) // 1cm = 10mm
         {
             text.text = Mathf.RoundToInt(playerSizeCounter) + " Millimeters";
         }
         else if (playerSizeCounter >= 10 && playerSizeCounter < 1000) // 100cm = 1000mm
         {
-            text.text = (playerSizeCounter / 10).ToString("F2") + " Centimeters"; // Display with two decimal places
+            text.text = (playerSizeCounter / 10).ToString("F2") + " Centimeters";
         }
         else if (playerSizeCounter >= 1000 && playerSizeCounter < 100000) // 1m = 100cm = 100000mm
         {
@@ -87,12 +80,13 @@ public class ObjectInteractions : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision) // Consume 
+    // consume
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         string tag = collision.gameObject.tag;
         float measurement;
         float size;
-
+        // do checks to consume
         if (GetMeasurementAndSize(tag, out measurement, out size))
         {
             if (playerSize >= size)
@@ -101,13 +95,10 @@ public class ObjectInteractions : MonoBehaviour
                 consumeHistoryText.text = FormatTag(tag);
                 consumeHistoryIcon.sprite = GetIcon(tag);
             }
-            else
-            {
-                Debug.Log($"Player size {playerSize} is too small to consume {tag}.");
-            }
         }
     }
 
+    // allows player to break collision to consume
     private void OnCollisionEnter2D(Collision2D collision)
     {
         string tag = collision.gameObject.tag;
@@ -124,6 +115,7 @@ public class ObjectInteractions : MonoBehaviour
         }
     }
 
+    // list of all objects
     public bool GetMeasurementAndSize(string tag, out float measurement, out float size)
     {
         measurement = 0f;
@@ -179,6 +171,7 @@ public class ObjectInteractions : MonoBehaviour
         return true;
     }
 
+    // get icon for history consume
     private Sprite GetIcon(string tag)
     {
         switch (tag)
@@ -199,33 +192,24 @@ public class ObjectInteractions : MonoBehaviour
             //     return smallFlowerIcon;
             // case "Feather":
             //     return featherIcon;
-
-
-            // Add cases for other tags and their corresponding icons
             default:
                 return null;
         }
     }
 
+    // actual consume part
     private void ConsumeObject(float measurement, float size, Collider2D collision)
     {
         audioManager?.Play("Collect");
 
-        // Increment player size and counter
         playerSizeCounter += measurement;
         playerSize += size / 10;
 
-        // Update player scale
         ScalePlayer(size);
-
-        //Debug.Log($"Consumed {collision.gameObject.tag}: PlayerSize={playerSize}, PlayerSizeCounter={playerSizeCounter}");
-
-        // Destroy the consumed object
         Destroy(collision.gameObject);
-
-        // Update the displayed text for the player's size
         UpdateText();
     }
+
 
     private void ScalePlayer(float sizeIncrement)
     {
@@ -235,7 +219,7 @@ public class ObjectInteractions : MonoBehaviour
 
     private string FormatTag(string tag)
     {
-        // Format the tag to a more readable form, e.g., "GrainOfSand" to "Grain Of Sand"
+        // formats the tag to more readable form. example "GrainOfSand" to "Grain Of Sand"
         return System.Text.RegularExpressions.Regex.Replace(tag, "([A-Z])", " $1").Trim();
     }
 }

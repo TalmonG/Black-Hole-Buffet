@@ -4,26 +4,25 @@ using Unity.Cinemachine;
 
 public class CameraZoomController : MonoBehaviour
 {
-    // Levels
+    // levels
     public GameObject[] levels;
 
-    private ObjectInteractions objectInteractions; // Reference to ObjectInteractions script
-    private CinemachineCamera cineCamCamera; // Reference to the Cinemachine Virtual Camera
-    private bool isZooming = false; // Flag to prevent multiple zooms at the same time
-    private int zoomCount = 0; // To track the current zoom stage
+    // references
+    private ObjectInteractions objectInteractions;
+    private CinemachineCamera cineCamCamera;
+    private bool isZooming = false;
+    private int zoomCount = 0;
 
-    // Define zoom thresholds and corresponding orthographic size increments
+    // player size for zoomout to happen
     private float[] zoomThresholds = { 30f, 120f, 200f };
     private float[] zoomIncrements = { 5f, 15f, 30f };
+    private float[] playerSpeeds = { 10f, 20f, 50f };
 
-    // Duration of each zoom transition in seconds
-    public float zoomDuration = 1f;
 
-    // CameraBounds scaling values (single float per scale)
+    // CameraBounds scaling values 
     private float[] cameraBoundsScales = { 0.7509878f, 1.23f, 4f };
 
-    // Player speed values (single float per zoom stage)
-    private float[] playerSpeeds = { 10f, 20f, 50f };
+    public float zoomDuration = 1f;
 
     private Transform cameraBoundsTransform;
     private PlayerControls playerControls; // Reference to PlayerControls script
@@ -33,76 +32,47 @@ public class CameraZoomController : MonoBehaviour
 
     void Start()
     {
-        // Find the CineCam GameObject by tag and get its CinemachineVirtualCamera component
+        // Find CineCam
         if (cineCamCamera == null)
         {
             GameObject cineCam = GameObject.FindGameObjectWithTag("CineCam");
             if (cineCam != null)
             {
                 cineCamCamera = cineCam.GetComponent<CinemachineCamera>();
-                if (cineCamCamera == null)
-                {
-                    Debug.LogError("CineCam does not have a CinemachineVirtualCamera component.");
-                }
-            }
-            else
-            {
-                Debug.LogError("No GameObject with tag 'CineCam' found.");
             }
         }
 
-        // AudioManager
+        // Find AudioManager
         GameObject audioManagerObject = GameObject.FindGameObjectWithTag("AudioManager");
         if (audioManagerObject != null)
         {
             audioManager = audioManagerObject.GetComponent<AudioManager>();
         }
-        else
-        {
-            Debug.LogWarning("AudioManager not found in the scene!");
-        }
 
-
-        // Find the Player GameObject by tag and get its ObjectInteractions component
+        // Find Player
         if (objectInteractions == null)
         {
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             if (player != null)
             {
                 objectInteractions = player.GetComponent<ObjectInteractions>();
-                if (objectInteractions == null)
-                {
-                    Debug.LogError("Player does not have an ObjectInteractions component.");
-                }
 
-                // Get PlayerControls component
+                // Get PlayerControls
                 playerControls = player.GetComponent<PlayerControls>();
-                if (playerControls == null)
-                {
-                    Debug.LogError("Player does not have a PlayerControls component.");
-                }
-            }
-            else
-            {
-                Debug.LogError("No GameObject with tag 'Player' found.");
             }
         }
 
-        // Find the CameraBounds GameObject by tag
+        // Find CameraBounds
         GameObject cameraBounds = GameObject.FindGameObjectWithTag("CameraBounds");
         if (cameraBounds != null)
         {
             cameraBoundsTransform = cameraBounds.transform;
         }
-        else
-        {
-            Debug.LogError("No GameObject with tag 'CameraBounds' found.");
-        }
     }
 
     void Update()
     {
-        // Check if we have more zoom stages and are not currently zooming
+        // Check if theres more zoom stages and is not currently zooming
         if (objectInteractions != null && zoomCount < zoomThresholds.Length && !isZooming)
         {
             // Check if playerSizeCounter exceeds the current zoom threshold
@@ -125,35 +95,35 @@ public class CameraZoomController : MonoBehaviour
         audioManager?.Play("ZoomOut");
         objectInteractions.playerLevel++;
 
-        Debug.Log($"Starting Zoom Out {zoomCount + 1}: Increasing orthographic size by {increment}");
+        //Debug.Log("Started zooming");
 
         // Update CameraBounds scale
         if (zoomCount < cameraBoundsScales.Length)
         {
             float scale = cameraBoundsScales[zoomCount];
             cameraBoundsTransform.localScale = new Vector3(scale, scale, scale);
-            Debug.Log($"Set CameraBounds scale to: {scale}");
+            //Debug.Log("Bounds Updated");
         }
 
         // Update Player speed
         if (playerControls != null && zoomCount < playerSpeeds.Length)
         {
             playerControls.maxMoveSpeed = playerSpeeds[zoomCount];
-            Debug.Log($"Updated Player maxMoveSpeed to: {playerControls.maxMoveSpeed}");
+            //Debug.Log("Player Speed Updated");
         }
 
         // Enable next level
         if (zoomCount + 1 < levels.Length)
         {
             levels[zoomCount + 1].SetActive(true);
-            Debug.Log($"Enabled level {zoomCount + 2}");
+            //Debug.Log("Next level enabled");
         }
 
         // Disable current level
         if (zoomCount < levels.Length)
         {
             levels[zoomCount].SetActive(false);
-            Debug.Log($"Disabled level {zoomCount + 1}");
+            //Debug.Log("current level disabled");
         }
 
         // Start zooming out
@@ -162,6 +132,7 @@ public class CameraZoomController : MonoBehaviour
 
         float elapsed = 0f;
 
+        // zoom anim
         while (elapsed < zoomDuration)
         {
             float t = elapsed / zoomDuration;

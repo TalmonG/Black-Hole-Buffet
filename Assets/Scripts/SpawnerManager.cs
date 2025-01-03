@@ -3,47 +3,42 @@ using UnityEngine;
 
 public class SpawnerManager : MonoBehaviour
 {
-    public GameObject[] creatures; // Array of creatures to spawn (drag and drop prefabs in the Inspector)
+    public GameObject[] creatures;
 
-    private ObjectInteractions playerInteractions; // Reference to the player's script
+    private ObjectInteractions playerInteractions;
     private int playerLevel;
-    private Transform[] spawners; // Array of child spawners
+    private Transform[] spawners;
 
     void Start()
     {
         // Get all child spawners
         spawners = GetComponentsInChildren<Transform>();
 
-        // Find the player and get the ObjectInteractions script
+        // find player and get ObjectInteractions
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
             playerInteractions = player.GetComponent<ObjectInteractions>();
-            if (playerInteractions == null)
-            {
-                Debug.LogError("ObjectInteractions script not found on Player.");
-            }
+
         }
         else
         {
-            Debug.LogError("Player not found in the scene.");
+            // Spawn Creatures
+            StartCoroutine(SpawnCreatures());
         }
-
-        // Start spawning creatures
-        StartCoroutine(SpawnCreatures());
     }
 
+    // Spawn Creatures
     IEnumerator SpawnCreatures()
     {
         while (true)
         {
             if (playerInteractions != null)
             {
-                // Fetch the player level dynamically each loop
+                // get player level dynamically each loop
                 playerLevel = Mathf.Clamp(playerInteractions.playerLevel, 1, 3);
-                Debug.Log($"Player level: {playerLevel}");
 
-                // Spawn settings based on player level
+                // Spawnrate based on player level
                 float spawnRate = GetSpawnRate(playerLevel);
 
                 // Spawn a creature
@@ -51,35 +46,33 @@ public class SpawnerManager : MonoBehaviour
             }
             else
             {
-                Debug.LogError("PlayerInteractions is null.");
-                yield return null; // Wait until playerInteractions is not null
+                yield return null; // Wait until playerInteractions not null
             }
         }
     }
 
+    // spawn at spawners
     private IEnumerator SpawnLevel(float spawnRate)
     {
-        // Randomly select a spawner
+        // Randomly select spawner
         Transform spawner = GetRandomSpawner();
-        Debug.Log($"Selected spawner: {spawner.name}");
 
-        // Randomly select a creature index using level-based probabilities
+        // randomly select creature index
         int randomIndex = GetCreatureIndexWithChance(playerLevel);
-        Debug.Log($"Spawning creature at index: {randomIndex}");
 
-        // Spawn the selected creature prefab
+        // Spawn selected creature
         GameObject creatureToSpawn = creatures[randomIndex];
         if (creatureToSpawn == null)
         {
-            Debug.LogError($"Creature prefab at index {randomIndex} is null!");
+            //Debug.Log("Creature is null!");
         }
         else
         {
-            Debug.Log($"Spawning creature: {creatureToSpawn.name}");
+            //Debug.Log("Spawning creature");
             Instantiate(creatureToSpawn, spawner.position, Quaternion.identity);
         }
 
-        // Wait for the spawn rate
+        // Wait for spawn rate
         yield return new WaitForSeconds(spawnRate);
     }
 
@@ -109,13 +102,13 @@ public class SpawnerManager : MonoBehaviour
                 // Level 1: Ant = 100%, Ladybug = 0%
                 return 0; // Always spawn ant
             case 2:
-                // Level 2: Ant = 60%, Ladybug = 40%
+                // Level 2: Ant = 80%, Ladybug = 20%
                 if (randomValue <= 80)
                     return 0; // Spawn ant
                 else
                     return 1; // Spawn ladybug
             case 3:
-                // Level 3: Ant = 30%, Ladybug = 70%
+                // Level 3: Ant = 50%, Ladybug = 50%
                 if (randomValue <= 50)
                     return 0; // Spawn ant
                 else

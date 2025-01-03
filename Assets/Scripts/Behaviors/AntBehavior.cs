@@ -7,35 +7,23 @@ public class AntBehavior : MonoBehaviour
     private ObjectInteractions playerInteractions;
     private Rigidbody2D rb;
 
-    public float speed = 2f; // Movement speed
-    public float changeDirectionTime = 5f; // Time to change wandering direction
-    public float wanderTowardsPlayerChance = 0.5f; // Chance to wander closer to the player (0 = never, 1 = always)  KEEP MINIMUM 0.2
+    public float speed = 2f;
+    public float changeDirectionTime = 5f;
+    public float wanderTowardsPlayerChance = 0.5f;
     public float detectionRadius = 3f;
 
     private Vector2 currentDirection;
     private Vector2 wanderDirection;
     private float antSize;
 
-    public bool isBeingPulled = false; // Flag to track if the ant is being pulled
+    public bool isBeingPulled = false;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
 
-        if (player == null)
-        {
-            Debug.LogError("Player not found! Make sure the player is tagged 'Player'.");
-            return;
-        }
-
         playerInteractions = player.GetComponent<ObjectInteractions>();
-
-        if (playerInteractions == null)
-        {
-            Debug.LogError("ObjectInteractions script not found on the Player!");
-            return;
-        }
 
         if (!TryGetAntSize(out antSize))
         {
@@ -48,34 +36,32 @@ public class AntBehavior : MonoBehaviour
 
     void Update()
     {
-        if (player == null || playerInteractions == null || isBeingPulled) return;
+        if (player == null || playerInteractions == null || isBeingPulled) return; // make sure things not broken so i break before it break me >:)
 
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
         Vector2 targetDirection;
 
-        if (distanceToPlayer < detectionRadius) // Detection radius
+        if (distanceToPlayer < detectionRadius) // detection radius
         {
-            if (playerInteractions.playerSize > antSize)
+            if (playerInteractions.playerSize > antSize) // flee if player bigger
             {
-                // Flee from the player
                 targetDirection = (transform.position - player.position).normalized;
             }
             else
             {
-                // Chase the player
+                // chase player
                 targetDirection = (player.position - transform.position).normalized;
             }
         }
         else
         {
-            // Continue wandering
+            // keep wandering
             targetDirection = wanderDirection;
         }
 
-        // Smoothly transition to the target direction
+        // attempt transition to the target direction, seems better after added but idk. (keep this just in case)
         currentDirection = Vector2.Lerp(currentDirection, targetDirection, Time.deltaTime * 5f);
 
-        // Apply movement
         rb.linearVelocity = currentDirection * speed;
 
         RotateToFaceMovement();
@@ -85,18 +71,18 @@ public class AntBehavior : MonoBehaviour
     {
         while (true)
         {
-            if (isBeingPulled) yield break; // Stop wandering while being pulled
+            if (isBeingPulled) yield break; // stop wandering if pulled
 
-            // Determine whether to wander toward the player
+            // should wander to player?
             if (Random.value < wanderTowardsPlayerChance)
             {
-                // Generate a wandering direction biased toward the player
+                // generate wandering direction toward the player
                 Vector2 toPlayer = (player.position - transform.position).normalized;
                 wanderDirection = Vector2.Lerp(Random.insideUnitCircle.normalized, toPlayer, 0.5f).normalized;
             }
             else
             {
-                // Generate a random wandering direction
+                // generate random wandering direction
                 wanderDirection = Random.insideUnitCircle.normalized;
             }
 
@@ -104,6 +90,7 @@ public class AntBehavior : MonoBehaviour
         }
     }
 
+    // get ant size
     private bool TryGetAntSize(out float size)
     {
         size = 0f;
@@ -118,16 +105,16 @@ public class AntBehavior : MonoBehaviour
         return false;
     }
 
+    // rotate ladybug to face movement
     private void RotateToFaceMovement()
     {
         Vector2 velocity = rb.linearVelocity;
 
-        if (velocity.magnitude > 0.01f) // Only rotate if moving
+        if (velocity.magnitude > 0.01f) // only rotate if moving
         {
             float angle = Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg;
 
-            // Apply rotation offset (adjust depending on sprite's orientation)
-            transform.rotation = Quaternion.Euler(0, 0, angle - 90f); // Adjust -90f as needed
+            transform.rotation = Quaternion.Euler(0, 0, angle - 90f);
         }
     }
 }
